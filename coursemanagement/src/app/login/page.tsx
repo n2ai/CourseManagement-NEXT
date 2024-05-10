@@ -3,8 +3,10 @@
 import { z } from "zod"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { FieldValue, useForm } from "react-hook-form" 
-import { Card } from "@/components/ui/card"
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
+import { Button } from "@/components/ui/button"
+import Link from "next/link"
 
 import {
     Form,
@@ -43,39 +45,50 @@ export default function Login(){
     }
 
     return(
-        <Card className="w-[150px]">
-            <Form {...form}>
-                <form onSubmit={form.handleSubmit(onSubmit)}>
-                    <FormField control={form.control} 
-                        name="email"
-                        render={({field})=>(
-                            <FormItem>
-                                <FormLabel>Email</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="@gmail.com" {...field}></Input>
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}>
-                        
-                    </FormField>
-                    <FormField control={form.control} 
-                        name="password"
-                        render={({field})=>(
-                            <FormItem>
-                                <FormLabel>Password</FormLabel>
-                                <FormControl>
-                                    <Input placeholder="enter password" {...field}></Input>
-                                </FormControl>
-                                <FormMessage/>
-                            </FormItem>
-                        )}>
-                        
-                    </FormField>
-
-                    <Button type="submit">Submit</Button>
-                </form>
-            </Form>
-        </Card>
+        <div className="flex items-center justify-center w-screen h-screen">
+            <Card className="w-[350px] h-[450px]">
+                <CardTitle className="text-center mt-5">
+                    Sign In
+                </CardTitle>
+                <CardContent>
+                    <Form {...form}>
+                        <form id="signIn-form" onSubmit={form.handleSubmit(onSubmit)}>
+                            <FormField control={form.control} 
+                                name="email"
+                                render={({field})=>(
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="@gmail.com" {...field}></Input>
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}>
+                                
+                            </FormField>
+                            <FormField control={form.control} 
+                                name="password"
+                                render={({field})=>(
+                                    <FormItem>
+                                        <FormLabel>Password</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="enter password" {...field}></Input>
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}>
+                                
+                            </FormField>
+                            
+                        </form>
+                        <Link className="underline right" href="/app">Create an Account</Link>
+                    </Form>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" form="singIn-form"  type="submit">Submit</Button>
+                </CardFooter>
+            </Card>
+        </div>
+       
     )
 }
