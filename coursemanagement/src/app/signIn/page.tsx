@@ -46,7 +46,7 @@ export default function SignIn(){
 
     return(
         <div className="flex items-center justify-center w-screen h-screen">
-            <Card className="w-[350px] h-[450px]">
+            <Card className="w-[350px] h-[350px]">
                 <CardTitle className="text-center mt-5">
                     Sign In
                 </CardTitle>
@@ -85,7 +85,7 @@ export default function SignIn(){
                     </Form>
                 </CardContent>
                 <CardFooter>
-                    <Button className="w-full" form="singIn-form"  type="submit">Submit</Button>
+                    <Button className="w-full" form="signIn-form"  type="submit">Submit</Button>
                 </CardFooter>
             </Card>
         </div>

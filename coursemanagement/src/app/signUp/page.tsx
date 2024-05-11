@@ -33,11 +33,91 @@ const formSchema = z.object({
     })
 })
 
+
+
 export default function SignUp(){
  
+    //1.Define your form
+
+    const form = useForm<z.infer<typeof formSchema>>({
+        resolver:zodResolver(formSchema)
+    })
+
+    //2. Define a submit handler
+    function onSubmit(values:z.infer<typeof formSchema>){
+        console.log(values)
+    }
+
     return(
         <div className="flex items-center justify-center w-screen h-screen">
-            
+            <Card className="w-[350px] h-[450px]">
+                <CardTitle className="text-center mt-5">
+                    Sign Up
+                </CardTitle>
+                <CardContent>
+                    <Form {...form}>
+                        <form id="signUp-form" onSubmit={form.handleSubmit(onSubmit)}>
+                            <FormField control={form.control} 
+                                name="firstName"
+                                render={({field})=>(
+                                    <FormItem>
+                                        <FormLabel>First Name</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Enter your first name" {...field}></Input>
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}>
+                                
+                            </FormField>
+                            <FormField control={form.control} 
+                                name="email"
+                                render={({field})=>(
+                                    <FormItem>
+                                        <FormLabel>Last Name</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="Enter your last name" {...field}></Input>
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}>
+                                
+                            </FormField>
+                            <FormField control={form.control} 
+                                name="email"
+                                render={({field})=>(
+                                    <FormItem>
+                                        <FormLabel>Email</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="@gmail.com" {...field}></Input>
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}>
+                                
+                            </FormField>
+                            <FormField control={form.control} 
+                                name="password"
+                                render={({field})=>(
+                                    <FormItem>
+                                        <FormLabel>Password</FormLabel>
+                                        <FormControl>
+                                            <Input placeholder="enter password" {...field}></Input>
+                                        </FormControl>
+                                        <FormMessage/>
+                                    </FormItem>
+                                )}>
+                                
+                            </FormField>
+                            
+                        </form>
+                        <Link className="underline right" href="/signIn">Already has an Account?</Link>
+                    </Form>
+                </CardContent>
+                <CardFooter>
+                    <Button className="w-full" form="signUp-form"  type="submit">Create an account</Button>
+                </CardFooter>
+            </Card>
         </div>
     )
 }
