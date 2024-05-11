@@ -7,6 +7,7 @@ import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { CreateUser } from "@/helpers/actions"
 
 import {
     Form,
@@ -56,7 +57,7 @@ export default function SignUp(){
                 </CardTitle>
                 <CardContent>
                     <Form {...form}>
-                        <form id="signUp-form" onSubmit={form.handleSubmit(onSubmit)}>
+                        <form action={CreateUser} id="signUp-form" >
                             <FormField control={form.control} 
                                 name="firstName"
                                 render={({field})=>(
@@ -71,7 +72,7 @@ export default function SignUp(){
                                 
                             </FormField>
                             <FormField control={form.control} 
-                                name="email"
+                                name="lastName"
                                 render={({field})=>(
                                     <FormItem>
                                         <FormLabel>Last Name</FormLabel>
@@ -102,7 +103,7 @@ export default function SignUp(){
                                     <FormItem>
                                         <FormLabel>Password</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="enter password" {...field}></Input>
+                                            <Input type="password" placeholder="enter password" {...field}></Input>
                                         </FormControl>
                                         <FormMessage/>
                                     </FormItem>
