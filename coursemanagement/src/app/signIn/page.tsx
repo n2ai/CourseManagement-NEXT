@@ -16,7 +16,7 @@ import {
     FormItem,
     FormLabel,
     FormMessage,
-  } from "@/components/ui/form"
+} from "@/components/ui/form"
 
 const formSchema = z.object({
   email: z.string().min(2,{
@@ -31,7 +31,7 @@ const formSchema = z.object({
   })
 })
 
-export default function Login(){
+export default function SignIn(){
 
     //1.Define your form
 
@@ -81,7 +81,7 @@ export default function Login(){
                             </FormField>
                             
                         </form>
-                        <Link className="underline right" href="/app">Create an Account</Link>
+                        <Link className="underline right" href="/signUp">Create an Account</Link>
                     </Form>
                 </CardContent>
                 <CardFooter>
