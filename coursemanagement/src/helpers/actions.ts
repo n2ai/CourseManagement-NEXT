@@ -2,6 +2,7 @@
 
 import { sql } from '@vercel/postgres';
 import { NextResponse } from 'next/server';
+import bcrypt from "bcryptjs";
 
 export const CreateUser = async (formData:FormData)=>{
 
@@ -14,7 +15,7 @@ export const CreateUser = async (formData:FormData)=>{
 
     const {userFirstName, userLastName, userEmail, userPassword} = rawFormData;
 
-
+    
 
     try {
         const result =
@@ -24,6 +25,7 @@ export const CreateUser = async (formData:FormData)=>{
       } catch (error) {
         return NextResponse.json({ error }, { status: 500 });
       }
+
 
 }
 
