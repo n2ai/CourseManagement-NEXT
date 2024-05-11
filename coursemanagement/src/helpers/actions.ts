@@ -14,12 +14,12 @@ export const CreateUser = async (formData:FormData)=>{
 
     const {userFirstName, userLastName, userEmail, userPassword} = rawFormData;
 
-    
+
 
     try {
         const result =
           await sql`INSERT INTO users (firstName,lastName,email,password) 
-                    VALUES (${userFirstName},${userLastName,userEmail,userPassword})`;
+                    VALUES (${userFirstName},${userLastName},${userEmail})`;
         return NextResponse.json({ result }, { status: 200 });
       } catch (error) {
         return NextResponse.json({ error }, { status: 500 });
