@@ -7,6 +7,7 @@ import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
+import { useState } from "react"
 
 import {
     Form,
@@ -33,6 +34,10 @@ const formSchema = z.object({
 
 export default function SignIn(){
 
+    //Contents
+    const [email,setEmail] = useState<string>("");
+    const [password,setPassword] = useState<string>("");
+
     //1.Define your form
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -41,7 +46,13 @@ export default function SignIn(){
 
     //2. Define a submit handler
     function onSubmit(values:z.infer<typeof formSchema>){
-        console.log(values)
+        const res = fetch('http://localhost:3000/api/authentication',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(values)
+        })
     }
 
     return(
@@ -55,11 +66,12 @@ export default function SignIn(){
                         <form id="signIn-form" onSubmit={form.handleSubmit(onSubmit)}>
                             <FormField control={form.control} 
                                 name="email"
+                                defaultValue= {email}
                                 render={({field})=>(
                                     <FormItem>
                                         <FormLabel>Email</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="@gmail.com" {...field}></Input>
+                                            <Input onChangeCapture={e => setEmail(e.currentTarget.value)} placeholder="@gmail.com" {...field} ></Input>
                                         </FormControl>
                                         <FormMessage/>
                                     </FormItem>
@@ -68,11 +80,12 @@ export default function SignIn(){
                             </FormField>
                             <FormField control={form.control} 
                                 name="password"
+                                defaultValue={password}
                                 render={({field})=>(
                                     <FormItem>
                                         <FormLabel>Password</FormLabel>
                                         <FormControl>
-                                            <Input placeholder="enter password" {...field}></Input>
+                                            <Input onChangeCapture={e => setPassword(e.currentTarget.value)} type="password" placeholder="enter password" {...field}></Input>
                                         </FormControl>
                                         <FormMessage/>
                                     </FormItem>
