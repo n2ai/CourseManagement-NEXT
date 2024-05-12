@@ -1,13 +1,14 @@
 'use client'
 
-import { z } from "zod"
-import { zodResolver } from "@hookform/resolvers/zod"
-import { FieldValue, useForm } from "react-hook-form" 
-import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card"
-import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-import Link from "next/link"
-import { useState } from "react"
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { FieldValue, useForm } from "react-hook-form" ;
+import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import Link from "next/link";
+import { useState } from "react";
+import Cookies from "js-cookie";
 
 import {
     Form,
@@ -45,15 +46,23 @@ export default function SignIn(){
     })
 
     //2. Define a submit handler
-    function onSubmit(values:z.infer<typeof formSchema>){
-        const res = fetch('http://localhost:3000/api/authentication',{
+    async function onSubmit(values:z.infer<typeof formSchema>){
+        const res = await fetch('http://localhost:3000/api/authentication',{
             method:'POST',
             headers:{
                 'Content-Type':'application/json'
             },
             body:JSON.stringify(values)
         })
+
+        const responseJSON = await res.json();
+        const jwt:string = responseJSON.jwt;
+
+        Cookies.set('jwt',jwt);
+        
     }
+
+
 
     return(
         <div className="flex items-center justify-center w-screen h-screen">

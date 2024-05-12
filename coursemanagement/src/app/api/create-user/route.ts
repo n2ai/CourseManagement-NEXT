@@ -11,6 +11,13 @@ export async function POST(request: Request) {
 
   
   try{
+
+    const accountQuery = await sql`SELECT email FROM users WHERE email = ${email}`;
+
+    if(!accountQuery.rows[0].email == email){
+      return NextResponse.json({message:"There is an existing account"},{status:409})
+    }
+
     const result = await sql`INSERT INTO users (firstName, lastName, email, password)
                             VALUES(${firstName},${lastName},${email},${hashedPassword});`;
 

@@ -1,12 +1,15 @@
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
 
 export async function POST(request:Request){
 
-    const {email,password} = await request.json()
+    const jwtKey:string = process.env.JWT_SECRET as string;
 
-    console.log(email,password)
+    const {email,password}:{email:string,password:string} = await request.json();
+
+    console.log(email,password);
 
     try{
         const result = await sql`SELECT password FROM users 
@@ -15,12 +18,15 @@ export async function POST(request:Request){
         const hashedPassword = result.rows[0].password;
         
         if(await bcrypt.compare(password,hashedPassword)){
-            console.log('ok')
+            console.log('ok');
         }else{
-            throw("Wrong Password")
+            throw("Wrong Password");
         }
 
-        return NextResponse.json({message:'OK'},{status:200})
+        const token = jwt.sign({email:`${email}`},jwtKey,{expiresIn:'2h'})
+        console.log(token)
+        //Give back the jwt token
+        return NextResponse.json({jwt:token},{status:200})
     }catch(error){
         return NextResponse.json({error},{status:500})
     }
