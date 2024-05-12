@@ -45,8 +45,17 @@ export default function SignUp(){
     })
 
     //2. Define a submit handler
-    function onSubmit(values:z.infer<typeof formSchema>){
-        console.log(values)
+    async function onSubmit(values:z.infer<typeof formSchema>){
+        //send data to routes handler
+        const res = await fetch('http://localhost:3000/api/create-user',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(values)
+        })
+        
+        console.log( await res.json())
     }
 
     return(
@@ -57,7 +66,7 @@ export default function SignUp(){
                 </CardTitle>
                 <CardContent>
                     <Form {...form}>
-                        <form action={CreateUser} id="signUp-form" >
+                        <form onSubmit={form.handleSubmit(onSubmit)} id="signUp-form" >
                             <FormField control={form.control} 
                                 name="firstName"
                                 render={({field})=>(
