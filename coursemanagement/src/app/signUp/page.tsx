@@ -7,7 +7,9 @@ import { Card, CardContent, CardFooter, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
-import { CreateUser } from "@/helpers/actions"
+import { useState } from "react"
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
+
 
 import {
     Form,
@@ -37,7 +39,11 @@ const formSchema = z.object({
 
 
 export default function SignUp(){
- 
+    const [alert, setAlert] = useState<boolean>(true);
+    const [alertTitle,setAlertTitle] = useState<string>("");
+    const [alertDescription, setAlertDescription] = useState<string>("");
+    const [alertVariant, setAlertVariant] = useState<"default" | "destructive" | null | undefined>("default")
+
     //1.Define your form
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -55,11 +61,33 @@ export default function SignUp(){
             body:JSON.stringify(values)
         })
         
-        console.log( await res.json())
+        if(res.status == 200){
+            setAlertTitle("You Have Successfully created an account!");
+            setAlertDescription("You can now login with the created account");
+        }else if(res.status == 409){
+            setAlertTitle("There is an existing account!");
+            setAlertDescription("Please try again!");
+            setAlertVariant("destructive")
+        }else if(res.status == 500){
+            setAlertTitle("Errors happen!");
+            setAlertDescription("Please try again!");
+            setAlertVariant("destructive")
+        }
     }
 
     return(
-        <div className="flex items-center justify-center w-screen h-screen">
+        <div className=" static flex items-center justify-center w-screen h-screen">
+            
+            {/**Alert */}
+
+            <Alert className="absolute top-2 w-[40%]" variant={alertVariant} >
+                <AlertTitle>{alertTitle}</AlertTitle>
+                <AlertDescription>
+                    {alertDescription}
+                </AlertDescription>
+            </Alert>
+
+
             <Card className="w-[350px] h-[450px]">
                 <CardTitle className="text-center mt-5">
                     Sign Up
