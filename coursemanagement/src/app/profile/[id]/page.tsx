@@ -2,6 +2,7 @@
 
 import { useState,useEffect } from "react";
 import Cookies from "js-cookie";
+import { json } from "stream/consumers";
 
 export default function Profile({params}:{params:{id:number}}){
     
@@ -27,6 +28,8 @@ export default function Profile({params}:{params:{id:number}}){
                 },
                 body:JSON.stringify({userId:userId})
             })
+
+            console.log(await res.json())
         }
 
         fetchData()
