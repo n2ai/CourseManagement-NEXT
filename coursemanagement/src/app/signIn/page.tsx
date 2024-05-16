@@ -39,7 +39,10 @@ export default function SignIn(){
     //Contents
     const [email,setEmail] = useState<string>("");
     const [password,setPassword] = useState<string>("");
-
+    const [alert,setAlert] = useState<boolean>(false);
+    const [alertTitle,setAlertTitle] = useState<string>("");
+    const [alertDescription,setAlertDescription] = useState<string>("");
+    const [alertVariant,setAlertVariant] = useState<"default" | "destructive" | null | undefined>("default")
     //1.Define your form
 
     const form = useForm<z.infer<typeof formSchema>>({
@@ -56,17 +59,34 @@ export default function SignIn(){
             body:JSON.stringify(values)
         })
 
-        const responseJSON = await res.json();
-        const jwt:string = responseJSON.jwt;
+        if(res.status === 200){
+            
+            const responseJSON = await res.json();
+            const jwt:string = responseJSON.jwt;
+            const userId:number = responseJSON.userId;
+            
+            Cookies.set('jwt',jwt);
+        }else{
+            setAlertTitle("Wrong Credentials")
+            setAlertDescription("Please try to log in again")
+            setAlertVariant("destructive")
+            setAlert(true)
+        }
 
-        Cookies.set('jwt',jwt);
+
         
     }
 
 
 
     return(
-        <div className="flex items-center justify-center w-screen h-screen">
+        <div className="relative flex items-center justify-center w-screen h-screen">
+            { alert && <Alert className="absolute top-2 w-[40%]" variant={alertVariant} >
+                <AlertTitle>{alertTitle}</AlertTitle>
+                <AlertDescription>
+                    {alertDescription}
+                </AlertDescription>
+            </Alert>}
             <Card className="w-[350px] h-[350px]">
                 <CardTitle className="text-center mt-5">
                     Sign In
