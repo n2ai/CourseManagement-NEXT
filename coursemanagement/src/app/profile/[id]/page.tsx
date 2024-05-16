@@ -3,23 +3,34 @@
 import { useState,useEffect } from "react";
 import Cookies from "js-cookie";
 
-export default function Profile({params,searchParams}){
+export default function Profile({params}:{params:{id:number}}){
     
     const [render,setRender] = useState<boolean>(false);
     const userId:number = params.id;
-    const cookies = Cookies.get()
-    const jwt:string = cookies.jwt
-    console.log(jwt)
+    const cookies = Cookies.get();
+    const jwt:string = cookies?.jwt;
+    
 
-    // useEffect(()=>{
-    //     const res = await fetch('http://localhost:3000/api/authentication',{
-    //         method:'POST',
-    //         headers:{
-    //             'Content-Type':'application/json'
-    //         },
-    //         body:JSON.stringify()
-    //     })
-    // })
+    useEffect(()=>{
+        // const res = await fetch('http://localhost:3000/api/profileVerify',{
+        //     method:'POST',
+        //     headers:{
+        //         'Content-Type':'application/json'
+        //     },
+        //     body:JSON.stringify({userId:userId})
+        // })
+        const fetchData = async ()=>{
+            const res = await fetch('http://localhost:3000/api/profileVerify',{
+                method:'POST',
+                headers:{
+                    'Content-Type':'application/json'
+                },
+                body:JSON.stringify({userId:userId})
+            })
+        }
+
+        fetchData()
+    })
 
 
     return(
