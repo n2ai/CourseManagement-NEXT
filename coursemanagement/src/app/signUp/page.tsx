@@ -39,7 +39,7 @@ const formSchema = z.object({
 
 
 export default function SignUp(){
-    const [alert, setAlert] = useState<boolean>(true);
+    const [alert, setAlert] = useState<boolean>(false);
     const [alertTitle,setAlertTitle] = useState<string>("");
     const [alertDescription, setAlertDescription] = useState<string>("");
     const [alertVariant, setAlertVariant] = useState<"default" | "destructive" | null | undefined>("default")
@@ -60,18 +60,22 @@ export default function SignUp(){
             },
             body:JSON.stringify(values)
         })
-        
+
         if(res.status == 200){
             setAlertTitle("You Have Successfully created an account!");
             setAlertDescription("You can now login with the created account");
+            setAlertVariant("default")
+            setAlert(prev=>!prev)
         }else if(res.status == 409){
             setAlertTitle("There is an existing account!");
             setAlertDescription("Please try again!");
             setAlertVariant("destructive")
+            setAlert(prev=>!prev)
         }else if(res.status == 500){
             setAlertTitle("Errors happen!");
             setAlertDescription("Please try again!");
             setAlertVariant("destructive")
+            setAlert(prev=>!prev)
         }
     }
 
@@ -80,12 +84,12 @@ export default function SignUp(){
             
             {/**Alert */}
 
-            <Alert className="absolute top-2 w-[40%]" variant={alertVariant} >
+            { alert && <Alert className="absolute top-2 w-[40%]" variant={alertVariant} >
                 <AlertTitle>{alertTitle}</AlertTitle>
                 <AlertDescription>
                     {alertDescription}
                 </AlertDescription>
-            </Alert>
+            </Alert>}
 
 
             <Card className="w-[350px] h-[450px]">
