@@ -3,6 +3,7 @@
 import { useState,useEffect } from "react";
 import Cookies from "js-cookie";
 import { json } from "stream/consumers";
+import { Love_Light } from "next/font/google";
 
 export default function Profile({params}:{params:{id:number}}){
     
@@ -13,13 +14,6 @@ export default function Profile({params}:{params:{id:number}}){
     
 
     useEffect(()=>{
-        // const res = await fetch('http://localhost:3000/api/profileVerify',{
-        //     method:'POST',
-        //     headers:{
-        //         'Content-Type':'application/json'
-        //     },
-        //     body:JSON.stringify({userId:userId})
-        // })
         const fetchData = async ()=>{
             const res = await fetch('http://localhost:3000/api/profileVerify',{
                 method:'POST',
@@ -29,12 +23,21 @@ export default function Profile({params}:{params:{id:number}}){
                 body:JSON.stringify({userId:userId})
             })
 
-            console.log(await res.json())
+            const status:number = res.status
+
+            if(status === 200){
+                setRender(true);
+            }else{
+                setRender(false);
+            }
         }
 
-        fetchData()
+        fetchData();
     })
 
+    if(!render) return null; 
+
+    //Get Data
 
     return(
         <div>
