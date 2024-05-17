@@ -10,7 +10,7 @@ import Link from "next/link";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert"
-import {redirect} from "next/navigation";
+import { useRouter } from 'next/navigation';
 
 import {
     Form,
@@ -36,6 +36,9 @@ const formSchema = z.object({
 })
 
 export default function SignIn(){
+
+    //router
+    const { push } = useRouter();
 
     //Contents
     const [email,setEmail] = useState<string>("");
@@ -67,7 +70,7 @@ export default function SignIn(){
             const userId:number = responseJSON.userId;
             
             Cookies.set('jwt',jwt);
-            redirect(`/profile/1`);
+            push(`http://localhost:3000/profile/${userId}`);
         }else{
             setAlertTitle("Wrong Credentials")
             setAlertDescription("Please try to log in again")
