@@ -3,6 +3,7 @@ import { NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import jsonwebtoken from "jsonwebtoken";
 
+import { cookies } from 'next/headers'
 type JwtPayload = {
     email:string,
     iat:number,
@@ -11,10 +12,8 @@ type JwtPayload = {
 
 export async function POST(request:Request){
     //Extract cookie
-    const cookie = request.headers.get('Cookie');
-
-    //Slice cookie to get jwt
-    const jwt:string = cookie?.slice(4)!;
+    
+    const jwt:string = cookies().get('jwt')?.value!
 
     //Request JSON
     const requestJson = await request.json();
@@ -25,12 +24,11 @@ export async function POST(request:Request){
     //Get secret key
     const secretKey = process?.env?.JWT_SECRET!;
     
-
     try{
 
         //Check JWT
         const decoded = jsonwebtoken.verify(jwt,secretKey) as JwtPayload;
-
+        
         //Get User email
         const userEmail = decoded.email;
 
