@@ -1,18 +1,20 @@
 'use client';
 
 import { useState,useEffect } from "react";
+import { Book } from "lucide-react";
 import Cookies from "js-cookie";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from 'next/navigation';
+import { SideNav } from "@/components/ui/sidenav";
 import {
-    NavigationMenu,
-    NavigationMenuContent,
-    NavigationMenuIndicator,
-    NavigationMenuItem,
-    NavigationMenuLink,
-    NavigationMenuList,
-    NavigationMenuTrigger,
-    NavigationMenuViewport,
-} from "@/components/ui/navigation-menu"
+    Menubar,
+    MenubarContent,
+    MenubarItem,
+    MenubarMenu,
+    MenubarSeparator,
+    MenubarShortcut,
+    MenubarTrigger,
+  } from "@/components/ui/menubar"
 
 import { Button } from "@/components/ui/button";
 
@@ -55,14 +57,19 @@ export default function ProfileLayout({children,params}:LayoutProps){
 
     return(
         <div className="grid w-screen h-screen md:grid-cols-[20%,80%] md:grid-rows-[70px]">
-            <div className="w-full border bg-blue-400">
-                Logo
+            <div className="w-full border flex justify-center items-center">
+                <Book />
+                <h1>Course Management</h1>
             </div>
-            <div className="border w-full bg-red-400">
-                Profile
+            <div className="border w-full flex items-center justify-between">
+                <div></div>
+                <Avatar className=" flex ">
+                    <AvatarImage src="https://github.com/shadcn.png" />
+                    <AvatarFallback>CN</AvatarFallback>
+                </Avatar>
             </div>
-            <div className="border w-full bg-green-400">
-                Navbar
+            <div className="border w-full ">
+                <SideNav/>
             </div>
 
             <div className="border w-full bg-yellow-400">
