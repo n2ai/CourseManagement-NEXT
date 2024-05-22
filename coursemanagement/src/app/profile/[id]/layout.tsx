@@ -69,7 +69,7 @@ export default function ProfileLayout({children,params}:LayoutProps){
                 </Avatar>
             </div>
             <div className="border w-full ">
-                <SideNav/>
+                <SideNav id={userId}/>
             </div>
 
             <div className="border w-ful">
