@@ -72,8 +72,8 @@ export default function ProfileLayout({children,params}:LayoutProps){
                 <SideNav/>
             </div>
 
-            <div className="border w-full bg-yellow-400">
-                Main
+            <div className="border w-ful">
+                {children}
             </div>
         </div>
     )

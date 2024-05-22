@@ -11,47 +11,91 @@ import {
     NavigationMenuList,
     NavigationMenuTrigger,
     NavigationMenuViewport,
-  } from "@/components/ui/navigation-menu"
+} from "@/components/ui/navigation-menu";
+import { Calendar, User } from "lucide-react";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+
+interface ICourseCards{
+  title:string,
+  CRN:string,
+  professor:string,
+  descriptions:string,
+  schedule:string,
+}
+
+const courseCards:ICourseCards[] = [
+  {title:'Introduction to Computer Science I',
+    CRN: 'CS1301',
+    professor:'Yilmaz Emre',
+    descriptions:'This is CS I class',
+    schedule:'N/A'
+  },{
+    title:'Introduction to Computer Science II',
+    CRN: 'CS1302',
+    professor:'Yilmaz Emre',
+    descriptions:'This is CS II class',
+    schedule:'N/A'
+  },{
+    title:'Introduction to Computer Science II',
+    CRN: 'CS1302',
+    professor:'Yilmaz Emre',
+    descriptions:'This is CS II class',
+    schedule:'N/A'
+  },{
+    title:'Introduction to Computer Science II',
+    CRN: 'CS1302',
+    professor:'Yilmaz Emre',
+    descriptions:'This is CS II class',
+    schedule:'N/A'
+  }
+]
 
 
 export default function Profile({params}:{params:{id:number}}){
     
     const [render,setRender] = useState<boolean>(false);
-    // const userId:number = params.id;
-    // const cookies = Cookies.get();
-    // const jwt:string = cookies?.jwt;
-    
 
-    // useEffect(()=>{
-    //     const fetchData = async ()=>{
-    //         const res = await fetch('http://localhost:3000/api/profileVerify',{
-    //             method:'POST',
-    //             headers:{
-    //                 'Content-Type':'application/json'
-    //             },
-    //             body:JSON.stringify({userId:userId})
-    //         })
+    const courseCardsList = courseCards.map((course,index)=>{
+      return(
+        <Card key={index} className="border border-black sm:w-[30%]">
+          <CardHeader>
+            <CardTitle>
+              {`${course.title}`}
+            </CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CardDescription>
+              {course.descriptions}
+            </CardDescription>
+          </CardContent>
+          <CardFooter>
+            <CardContent className="flex gap-3">
+              <div className="flex">
+                <Calendar />
+                <p>{course.schedule}</p>
+              </div>
+              <div className="flex">
+                <User />
+                <p>{course.professor}</p>
+              </div>
+            </CardContent>
+          </CardFooter>
+        </Card>
+      )
+    })
 
-    //         const status:number = res.status
-
-    //         if(status === 200){
-    //             setRender(true);
-    //         }else{
-    //             setRender(false);
-    //         }
-    //     }
-
-    //     fetchData();
-    // })
-
-    if(!render) return null; 
-
-    //Get Data
+  
 
     return(
-        
-       <div>
-        This is home
+       <div className="flex p-3 gap-3 flex-wrap">
+          {courseCardsList}
        </div>
     )
 }
