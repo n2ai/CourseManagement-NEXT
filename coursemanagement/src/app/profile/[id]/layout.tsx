@@ -54,7 +54,7 @@ export default function ProfileLayout({children,params}:LayoutProps){
         fetchData();
     })
 
-
+    
     return(
         <div className="grid w-screen h-screen md:grid-cols-[20%,80%] md:grid-rows-[70px]">
             <div className="w-full border flex justify-center items-center">

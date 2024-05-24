@@ -9,8 +9,6 @@ export async function POST(request:Request){
 
     const {email,password}:{email:string,password:string} = await request.json();
 
-    console.log(email,password);
-
     try{
         const result = await sql`SELECT password,id FROM users 
                                 WHERE email = ${email};`
