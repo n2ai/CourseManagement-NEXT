@@ -4,6 +4,7 @@ import { usePathname } from 'next/navigation'
 import Link from "next/link";
 import { LayoutDashboard,Book,Calendar, Settings,Captions } from "lucide-react";
 
+
 interface ISideNavProps{
     id:string
 }

@@ -1,11 +1,12 @@
 'use client';
 
-import { useState,useEffect } from "react";
+import { useState,useEffect, Dispatch, SetStateAction } from "react";
 import { Book } from "lucide-react";
 import Cookies from "js-cookie";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from 'next/navigation';
 import { SideNav } from "@/components/ui/sidenav";
+import { createContext } from "react";
 import {
     Menubar,
     MenubarContent,
@@ -24,13 +25,23 @@ interface LayoutProps{
     params: {id:number}
 }
 
+export interface ICartItems{
+    classid:string,
+    classname:string
+}
+
+
+
 export default function ProfileLayout({children,params}:LayoutProps){
 
     const userId:number = params.id;
     const cookies = Cookies.get();
     const jwt:string = cookies?.jwt;
     const [render,setRender] = useState<boolean>(false);
-    const {push} = useRouter()
+    const [cart, setCart] = useState<ICartItems[]>([]);
+    const {push} = useRouter();
+
+    const PageContext = createContext<Dispatch<SetStateAction<ICartItems[]>>>(setCart);
 
     useEffect(()=>{
         const fetchData = async ()=>{
@@ -73,7 +84,9 @@ export default function ProfileLayout({children,params}:LayoutProps){
             </div>
 
             <div className="border w-ful">
-                {children}
+                <PageContext.Provider value={setCart}>
+                    {children}
+                </PageContext.Provider>
             </div>
         </div>
     )
