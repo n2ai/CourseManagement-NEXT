@@ -1,7 +1,7 @@
 'use client';
 
 import { useState,useEffect, Dispatch, SetStateAction } from "react";
-import { Book } from "lucide-react";
+import { Book, ShoppingCart } from "lucide-react";
 import Cookies from "js-cookie";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useRouter } from 'next/navigation';
@@ -18,7 +18,7 @@ import {
   } from "@/components/ui/menubar"
 
 import { Button } from "@/components/ui/button";
-
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 interface LayoutProps{
     children:React.ReactNode,
@@ -30,18 +30,34 @@ export interface ICartItems{
     classname:string
 }
 
-
+export const PageContext = createContext<Dispatch<SetStateAction<ICartItems[]>>>(()=>{});
 
 export default function ProfileLayout({children,params}:LayoutProps){
 
     const userId:number = params.id;
     const cookies = Cookies.get();
-    const jwt:string = cookies?.jwt;
-    const [render,setRender] = useState<boolean>(false);
+    // const jwt:string = cookies?.jwt;
+    // const [render,setRender] = useState<boolean>(false);
     const [cart, setCart] = useState<ICartItems[]>([]);
     const {push} = useRouter();
 
-    const PageContext = createContext<Dispatch<SetStateAction<ICartItems[]>>>(setCart);
+    const cartItemArray = cart.map((item, index)=>{
+        return(
+            <div key={index} className="flex">
+                <div>{item.classid}</div>
+                <div>{item.classname}</div>
+                <Button type="button" onClick={()=>removeItemFromCart(item)}>Remove Item</Button>
+            </div>
+        )
+    })
+
+    //Will Work on this feature
+    const removeItemFromCart = (removedItem:ICartItems)=>{
+        setCart((prev:ICartItems[])=>{
+            const items = prev.filter(item=>item.classid !== removedItem.classid);
+            return items;
+        })
+    }
 
     useEffect(()=>{
         const fetchData = async ()=>{
@@ -64,8 +80,12 @@ export default function ProfileLayout({children,params}:LayoutProps){
 
         fetchData();
     })
-
     
+
+  
+    
+    console.log(cart)
+
     return(
         <div className="grid w-screen h-screen md:grid-cols-[20%,80%] md:grid-rows-[70px]">
             <div className="w-full border flex justify-center items-center">
@@ -73,7 +93,22 @@ export default function ProfileLayout({children,params}:LayoutProps){
                 <h1>Course Management</h1>
             </div>
             <div className="border w-full flex items-center justify-between">
-                <div></div>
+                <Popover>
+                    <PopoverTrigger>
+                        
+                        <ShoppingCart/>
+                        
+                    </PopoverTrigger>
+                    <PopoverContent>
+                        
+                        {cart.length === 0 ? (<p>There is no item in cart</p>): (
+                            <div>
+                                {cartItemArray}
+                            </div>
+                        )}
+                        
+                    </PopoverContent>
+                </Popover>
                 <Avatar className=" flex ">
                     <AvatarImage src="https://github.com/shadcn.png" />
                     <AvatarFallback>CN</AvatarFallback>

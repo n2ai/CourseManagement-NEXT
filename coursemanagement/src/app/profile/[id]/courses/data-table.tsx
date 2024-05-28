@@ -11,9 +11,7 @@ import {
   getPaginationRowModel,
   useReactTable,
 } from "@tanstack/react-table";
-
 import { useState } from "react";
-
 import {
   Table,
   TableBody,
@@ -22,7 +20,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -31,6 +28,15 @@ interface DataTableProps<TData, TValue> {
   data: TData[]
 }
 
+import { PageContext } from "../layout";
+import { useContext } from "react";
+import { ICartItems } from "../layout";
+
+const fakeCart:ICartItems[] = [{
+    classid: "CS1101",
+    classname: "Introduction to CS"
+}];
+
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -38,6 +44,8 @@ export function DataTable<TData, TValue>({
 
     const [sorting, setSorting] = useState<SortingState>([]);
     const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
+
+    const setCart = useContext(PageContext);
 
     const table = useReactTable({
         data,
@@ -53,7 +61,27 @@ export function DataTable<TData, TValue>({
             columnFilters
         }
     })
+    
+    const handleRowClick = (cell:any) => {
+        const className = cell.row.original.classname;
+        const classId = cell.row.original.classid;
+        const cartItem:ICartItems = {
+            classid:classId,
+            classname:className
+        }
 
+        
+
+        setCart((prev:ICartItems[])=>{
+            
+            for(const i of prev){
+                if(i.classid === cartItem.classid){
+                    return prev
+                }
+            }
+            return [cartItem,...prev]
+        });
+    }
   
 
   return (
@@ -94,9 +122,11 @@ export function DataTable<TData, TValue>({
                     <TableRow
                         key={row.id}
                         data-state={row.getIsSelected() && "selected"}
+                        
                     >
                         {row.getVisibleCells().map((cell) => (
-                        <TableCell key={cell.id}>
+                        <TableCell key={cell.id} onClick={()=>handleRowClick(cell)}
+                        className="cursor-pointer">
                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                         </TableCell>
                         ))}
