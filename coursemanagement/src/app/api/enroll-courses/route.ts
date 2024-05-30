@@ -13,18 +13,43 @@ export async function POST(request:Request){
 
     //Include list of required courses
     let requiredCourse = [];
-
+    let mustTakenClasses = [];
     //1st Check prequisite of Student
     for(const i of courses){
-        const prequisiteQuery = await sql`SELECT classid FROM prerequisites WHERE neededclassid = ${i.classid};`;
-        if(prequisiteQuery.rows[0]?.classid){
-            requiredCourse.push(prequisiteQuery.rows[0].classid)
+        const prequisiteQuery = await sql`SELECT neededclassid FROM prerequisites WHERE classid = ${i.classid};`;
+        if(prequisiteQuery.rows[0]?.neededclassid){
+            requiredCourse.push(prequisiteQuery.rows[0].neededclassid)
         }
     }
 
+    console.log(requiredCourse)
+
+    //2nd check what class must be taken
+    for(const i of requiredCourse){
+        const mustTakenCourseQuery = await sql`SELECT enrollmentid FROM enrollments WHERE classid = ${i.classid};`
+        if(!mustTakenCourseQuery.rows[0]?.enrollmentid){
+            mustTakenClasses.push(i)
+        }
+    }
+
+    //3rd what to return 
+    if(requiredCourse.length === 0){
+        
+        for(const i of courses){
+            await sql`INSERT INTO enrollments (userid, classid) VALUES (${userId}, ${i.classid})`
+        }
+        console.log("ok to add")
+    }else{
+        return NextResponse.json({requiredCourse:requiredCourse},{status:400})
+    }
+
+
     
     
-    //2nd INSERT into Table
+    //2nd Find if the student already have the prerequisite courses
+    for(const i of requiredCourse){
+        const takenClassQuery = await sql`SELECT `
+    }
     //3rd response
 
     
