@@ -81,7 +81,15 @@ export default function ProfileLayout({children,params}:LayoutProps){
         fetchData();
     })
     
-
+    const handleRegisterCart = async ()=>{
+        const res = await fetch('http://localhost:3000/api/enroll-courses',{
+            method:'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify({userId:userId,courses:cart})
+        })
+    }
   
     
     console.log(cart)
@@ -104,7 +112,7 @@ export default function ProfileLayout({children,params}:LayoutProps){
                         {cart.length === 0 ? (<p>There is no item in cart</p>): (
                             <div className="">
                                 {cartItemArray}
-                                <Button type="button">Enroll</Button>
+                                <Button onClick={handleRegisterCart} type="button">Enroll</Button>
                             </div>
                         )}
                         
