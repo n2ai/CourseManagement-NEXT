@@ -32,11 +32,6 @@ import { PageContext } from "../layout";
 import { useContext } from "react";
 import { ICartItems } from "../layout";
 
-const fakeCart:ICartItems[] = [{
-    classid: "CS1101",
-    classname: "Introduction to CS"
-}];
-
 export function DataTable<TData, TValue>({
   columns,
   data,
@@ -70,16 +65,20 @@ export function DataTable<TData, TValue>({
             classname:className
         }
 
-        
+       
 
         setCart((prev:ICartItems[])=>{
-            
-            for(const i of prev){
-                if(i.classid === cartItem.classid){
-                    return prev
+            if(prev.length === 4){
+                alert("Cannot add more than 4 classes");
+                return prev;
+            }else{
+                for(const i of prev){
+                    if(i.classid === cartItem.classid){
+                        return prev
+                    }
                 }
+                return [cartItem,...prev]
             }
-            return [cartItem,...prev]
         });
     }
   

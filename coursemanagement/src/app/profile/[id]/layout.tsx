@@ -43,7 +43,7 @@ export default function ProfileLayout({children,params}:LayoutProps){
 
     const cartItemArray = cart.map((item, index)=>{
         return(
-            <div key={index} className="flex">
+            <div key={index} className="grid grid-cols-3 gap-1">
                 <div>{item.classid}</div>
                 <div>{item.classname}</div>
                 <Button type="button" onClick={()=>removeItemFromCart(item)}>Remove Item</Button>
@@ -99,11 +99,12 @@ export default function ProfileLayout({children,params}:LayoutProps){
                         <ShoppingCart/>
                         
                     </PopoverTrigger>
-                    <PopoverContent>
+                    <PopoverContent className="flex flex-col w-auto">
                         
                         {cart.length === 0 ? (<p>There is no item in cart</p>): (
-                            <div>
+                            <div className="">
                                 {cartItemArray}
+                                <Button type="button">Enroll</Button>
                             </div>
                         )}
                         

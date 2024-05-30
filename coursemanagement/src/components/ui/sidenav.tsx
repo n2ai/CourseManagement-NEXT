@@ -26,12 +26,12 @@ export function SideNav ({id}:{id:number}){
             </Link>
             
 
-            <Link href={`/profile/${id}/calendar`}>
+            {/* <Link href={`/profile/${id}/calendar`}>
                 <Button className="h-[50px] border hover:text-white text-black bg-white ml-2 mr-2">
                     <Calendar/>Calendar
                 </Button>
             </Link>
-            
+             */}
             
             <Link href={`/profile/${id}/grades`}>
                 <Button className="h-[50px] border hover:text-white text-black bg-white ml-2 mr-2">
