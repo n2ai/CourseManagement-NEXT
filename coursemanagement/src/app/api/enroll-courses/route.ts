@@ -12,52 +12,90 @@ export async function POST(request:Request){
     //courses: all the course that users want to enroll
 
     //Include list of required courses
-    let requiredCourse = [];
-    let mustTakenClasses = [];
-    //1st Check prequisite of Student
-    for(const i of courses){
-        const prequisiteQuery = await sql`SELECT neededclassid FROM prerequisites WHERE classid = ${i.classid};`;
-        if(prequisiteQuery.rows[0]?.neededclassid){
-            requiredCourse.push(prequisiteQuery.rows[0].neededclassid)
-        }
-    }
+    // let requiredCourse = [];
+    // let mustTakenClasses = [];
+    // //1st Check prequisite of Student
+    // for(const i of courses){
+    //     const prequisiteQuery = await sql`SELECT neededclassid FROM prerequisites WHERE classid = ${i.classid};`;
+    //     if(prequisiteQuery.rows[0]?.neededclassid){
+    //         requiredCourse.push(prequisiteQuery.rows[0].neededclassid)
+    //     }
+    // }
 
-    console.log(requiredCourse)
+    // //Check if any required course are needed
+    // if(requiredCourse.length === 0){
+    //     for(const i of courses){
+    //             await sql`INSERT INTO enrollments (userid, classid, status) VALUES (${userId}, ${i.classid},'enrolled')`
+    //     }
+       
+    //     return NextResponse.json({message:"No prerequisite Class needed"},{status:200});
+    // }else{
+    //     console.log(requiredCourse);
+    //     for(const i of requiredCourse){
+    //         const mustTakenCourseQuery = await sql`SELECT enrollmentid FROM enrollments WHERE classid = ${i.classid as string} AND status = 'done';`
+    //         if(!mustTakenCourseQuery.rows[0]?.enrollmentid){
+    //             mustTakenClasses.push(i)
+    //         }else{
 
-    //2nd check what class must be taken
-    for(const i of requiredCourse){
-        const mustTakenCourseQuery = await sql`SELECT enrollmentid FROM enrollments WHERE classid = ${i.classid};`
-        if(!mustTakenCourseQuery.rows[0]?.enrollmentid){
-            mustTakenClasses.push(i)
-        }
-    }
+    //         }
+    //     }
+        
+    //     return NextResponse.json({message:"Must taken or finish these classes",data:mustTakenClasses},{status:200})
+    // }
+
+
+    //2nd check if user already assigned for those class
+    
 
     //3rd what to return 
-    if(requiredCourse.length === 0){
+    // if(requiredCourse.length === 0){
         
-        for(const i of courses){
-            await sql`INSERT INTO enrollments (userid, classid) VALUES (${userId}, ${i.classid})`
-        }
-        console.log("ok to add")
-    }else{
-        return NextResponse.json({requiredCourse:requiredCourse},{status:400})
-    }
-
-
-    
-    
-    //2nd Find if the student already have the prerequisite courses
-    for(const i of requiredCourse){
-        const takenClassQuery = await sql`SELECT `
-    }
-    //3rd response
-
-    
-    // try{
-    //     const result = sql`INSERT INTO enrollments VALUE`
+    //     for(const i of courses){
+    //         await sql`INSERT INTO enrollments (userid, classid, status) VALUES (${userId}, ${i.classid},'enrolled')`
+    //     }
+    //     console.log("ok to add")
+    // }else{
+    //     return NextResponse.json({requiredCourse:requiredCourse},{status:400})
     // }
-    
 
-    console.log("Hello")
+    for(const i of courses){
+        //Check if Student already take a course
+        const alreadyTakenQuery = await sql`SELECT enrollmentid FROM enrollments WHERE userid = ${userId} AND classid = ${i.classid};`
+        if(!alreadyTakenQuery.rows[0]?.enrollmentid){
+            // console.log(alreadyTakenQuery.rows[0]?.enrollmentid)
+            //Check if class need prerequisite
+            const prerequisiteQuery = await sql`SELECT neededclassid FROM prerequisites WHERE classid = ${i.classid};`
+            if(!prerequisiteQuery.rows[0]?.neededclassid){
+                //No need of prerequisite
+                try{
+                    await sql`INSERT INTO enrollments (userid, classid, status) VALUES (${userId}, ${i.classid}, 'enrolled')`
+                    
+                }catch(err){
+                    return NextResponse.json({error:err},{status:500})
+                }
+            }else{
+                const neededclassid = prerequisiteQuery.rows[0]?.neededclassid;
+                console.log(neededclassid)
+                try{
+                    const enrollmentCheckQuery =  await sql`SELECT enrollmentid FROM enrollments WHERE userid = ${userId} AND classid = ${neededclassid} AND status = 'done';`
+                    if(!enrollmentCheckQuery.rows[0]?.enrollmentid){
+                        throw("Cannot Take this class")
+                    }
+                }catch(err){
+                    return NextResponse.json({error:err, message:"Could not enroll in the class, neede prerequisite or status not complete"},{status:200})
+                }
+            }
+
+        }else{
+            return NextResponse.json({message:"Class Already Taken", data:i.classid},{status:200})
+        }
+
+    }
+
+
+
+
+
+    console .log("Hello")
     return NextResponse.json({message:"receive"},{status:200})
 }
