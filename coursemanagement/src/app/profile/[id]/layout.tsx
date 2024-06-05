@@ -19,6 +19,8 @@ import {
 
 import { Button } from "@/components/ui/button";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { json } from "stream/consumers";
+import { TableBody } from "@/components/ui/table";
 
 interface LayoutProps{
     children:React.ReactNode,
@@ -89,6 +91,23 @@ export default function ProfileLayout({children,params}:LayoutProps){
             },
             body:JSON.stringify({userId:userId,courses:cart})
         })
+
+        const responseJSON = await res.json();
+        console.log(responseJSON)
+        if(res.status === 200){
+            
+            if(responseJSON?.message === 'Class Already Taken'){
+                alert(`The user already take class ${responseJSON?.data}`);
+            }else{
+                alert(`Classes are taken successfully`);
+
+            }
+
+        }else if(res.status === 400){
+            alert(`Cannot take the class ${responseJSON?.classid}, must finish class ${responseJSON?.neededclassid}`);
+        }else if(res.status === 500){
+            alert(`Server error happened`);
+        }
     }
   
     
