@@ -1,7 +1,7 @@
 import { sql } from "@vercel/postgres";
 import { NextResponse } from 'next/server';
 
-type classType = {
+export type classType = {
     classid:string,
     startdate:string,
     instructor:string,
@@ -11,7 +11,7 @@ type classType = {
     credit:number,
 }
 
-const convertDateFunction = (item:string):string=>{
+export const convertDateFunction = (item:string):string=>{
     let date = new Date(item);
 
     // Extract month, day, and year from the Date object
@@ -48,7 +48,5 @@ export async function GET(request:Request){
         return NextResponse.json({data:classData},{status:200});
     }catch(error){
         return NextResponse.json({message:error},{status:500});
-    }
-    
-    
-}
+    };
+};

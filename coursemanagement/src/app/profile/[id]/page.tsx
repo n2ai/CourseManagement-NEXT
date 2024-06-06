@@ -28,7 +28,7 @@ interface ICourseCards{
   professor:string,
   descriptions:string,
   schedule:string,
-}
+};
 
 const courseCards:ICourseCards[] = [
   {title:'Introduction to Computer Science I',
@@ -57,14 +57,32 @@ const courseCards:ICourseCards[] = [
   }
 ]
 
-
 export default function Profile({params}:{params:{id:number}}){
     
-    const [render,setRender] = useState<boolean>(false);
+  const [render,setRender] = useState<boolean>(true);
+  const [classInformation, setClassInformation];
+  const userId = params.id;
+  
+  useEffect(()=>{
+    const fetchData = async ()=>{
+      const res = await fetch(`http://localhost:3000/api/profile/${userId}/get-userCourses`,{
+        method:'GET',
+      })
 
-    const courseCardsList = courseCards.map((course,index)=>{
-      return(
-        <Card key={index} className="border border-black sm:w-[30%]">
+      const responseJson = await res.json();
+      const classInformation  = responseJson.data;
+
+    };
+    
+    
+
+    fetchData();
+  })
+  
+  const courseCardsList = courseCards.map((course,index)=>{
+    return(
+      
+      <Card key={index} className="border border-black sm:w-[30%]">
           <CardHeader>
             <CardTitle>
               {`${course.title}`}
@@ -87,15 +105,16 @@ export default function Profile({params}:{params:{id:number}}){
               </div>
             </CardContent>
           </CardFooter>
-        </Card>
-      )
-    })
+      </Card>
+    )
+  })
 
   
 
-    return(
-       <div className="flex p-3 gap-3 flex-wrap">
-          {courseCardsList}
-       </div>
-    )
+  return(
+      render &&
+      <div className="flex p-3 gap-3 flex-wrap">
+        {courseCardsList}
+      </div>
+  )
 }
