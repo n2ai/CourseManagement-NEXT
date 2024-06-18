@@ -22,45 +22,53 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-interface ICourseCards{
+interface ICourseInformation{
   title:string,
   CRN:string,
   professor:string,
-  descriptions:string,
-  schedule:string,
+  startDate:string
 };
 
-const courseCards:ICourseCards[] = [
+interface IResponseData{
+  classid:string,
+  classname:string,
+  credit: number,
+  endate:string,
+  instructor:string,
+  room: number,
+  startdate: string
+}
+
+const courseCards:ICourseInformation[] = [
   {title:'Introduction to Computer Science I',
     CRN: 'CS1301',
     professor:'Yilmaz Emre',
-    descriptions:'This is CS I class',
-    schedule:'N/A'
+    startDate:"N/a"
   },{
     title:'Introduction to Computer Science II',
     CRN: 'CS1302',
     professor:'Yilmaz Emre',
-    descriptions:'This is CS II class',
-    schedule:'N/A'
+    startDate:"N/a"
   },{
     title:'Introduction to Computer Science II',
     CRN: 'CS1302',
     professor:'Yilmaz Emre',
-    descriptions:'This is CS II class',
-    schedule:'N/A'
+    startDate:"N/a"
   },{
     title:'Introduction to Computer Science II',
     CRN: 'CS1302',
     professor:'Yilmaz Emre',
-    descriptions:'This is CS II class',
-    schedule:'N/A'
+    startDate:"N/a"
   }
 ]
 
+
+
 export default function Profile({params}:{params:{id:number}}){
     
-  const [render,setRender] = useState<boolean>(true);
-  const [classInformation, setClassInformation];
+  const [render,setRender] = useState<boolean>(false);
+  const [classInformation, setClassInformation] = useState<ICourseInformation[]>([]);
+
   const userId = params.id;
   
   useEffect(()=>{
@@ -70,42 +78,58 @@ export default function Profile({params}:{params:{id:number}}){
       })
 
       const responseJson = await res.json();
-      const classInformation  = responseJson.data;
+      // const classInformation  = responseJson.data;
+      console.log(responseJson.data)
+      const responseData = responseJson.data;
+      setClassInformation(()=>{
+        const classList:ICourseInformation[] = responseData.map((item:IResponseData)=>{
+          return {
+              title: item?.classname,
+              CRN: item?.classid,
+              professor: item?.instructor,
+              startDate: item?.startdate
+          }
+        })
 
+        return classList
+      })
+
+      setRender(true)
     };
     
     
 
     fetchData();
-  })
+  },[userId])
   
-  const courseCardsList = courseCards.map((course,index)=>{
+  const courseCardsList = classInformation.map((course,index)=>{
     return(
       
+      render &&  
       <Card key={index} className="border border-black sm:w-[30%]">
-          <CardHeader>
-            <CardTitle>
-              {`${course.title}`}
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <CardDescription>
-              {course.descriptions}
-            </CardDescription>
-          </CardContent>
-          <CardFooter>
-            <CardContent className="flex gap-3">
-              <div className="flex">
-                <Calendar />
-                <p>{course.schedule}</p>
-              </div>
-              <div className="flex">
-                <User />
-                <p>{course.professor}</p>
-              </div>
+            <CardHeader>
+              <CardTitle>
+                {`${course.title}`}
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <CardDescription>
+                {course.CRN}
+              </CardDescription>
             </CardContent>
-          </CardFooter>
-      </Card>
+            <CardFooter>
+              <CardContent className="flex gap-3">
+                <div className="flex">
+                  <Calendar />
+                  <p>{course.startDate}</p>
+                </div>
+                <div className="flex">
+                  <User />
+                  <p>{course.professor}</p>
+                </div>
+              </CardContent>
+            </CardFooter>
+        </Card>
     )
   })
 
