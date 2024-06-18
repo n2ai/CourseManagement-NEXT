@@ -74,7 +74,7 @@ export default function Profile({params}:{params:{id:number}}){
   useEffect(()=>{
     const fetchData = async ()=>{
       const res = await fetch(`http://localhost:3000/api/profile/${userId}/get-userCourses`,{
-        method:'GET',
+        method:'POST',
       })
 
       const responseJson = await res.json();
@@ -100,12 +100,10 @@ export default function Profile({params}:{params:{id:number}}){
     
 
     fetchData();
-  },[userId])
+  },[])
   
   const courseCardsList = classInformation.map((course,index)=>{
     return(
-      
-      render &&  
       <Card key={index} className="border border-black sm:w-[30%]">
             <CardHeader>
               <CardTitle>

@@ -13,7 +13,7 @@ type userCourses = {
 
 
 
-export async function GET(request:Request, {params}:{params:requestParams}){
+export async function POST(request:Request, {params}:{params:requestParams}){
     
     const userId = params.id;
     let userCourses:userCourses[] = [];
@@ -35,6 +35,8 @@ export async function GET(request:Request, {params}:{params:requestParams}){
                 credit: Number(data.credit),
             }
         })
+
+        console.log(classInformationQueryResult)
 
         return NextResponse.json({data:classInformation},{status:200})
 
