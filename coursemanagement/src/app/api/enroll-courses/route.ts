@@ -8,55 +8,7 @@ type coursesType = {
 
 export async function POST(request:Request){
     const {userId, courses}:{userId:string,courses:coursesType[]} = await request.json()
-    //userId: user's Id
-    //courses: all the course that users want to enroll
-
-    //Include list of required courses
-    // let requiredCourse = [];
-    // let mustTakenClasses = [];
-    // //1st Check prequisite of Student
-    // for(const i of courses){
-    //     const prequisiteQuery = await sql`SELECT neededclassid FROM prerequisites WHERE classid = ${i.classid};`;
-    //     if(prequisiteQuery.rows[0]?.neededclassid){
-    //         requiredCourse.push(prequisiteQuery.rows[0].neededclassid)
-    //     }
-    // }
-
-    // //Check if any required course are needed
-    // if(requiredCourse.length === 0){
-    //     for(const i of courses){
-    //             await sql`INSERT INTO enrollments (userid, classid, status) VALUES (${userId}, ${i.classid},'enrolled')`
-    //     }
-       
-    //     return NextResponse.json({message:"No prerequisite Class needed"},{status:200});
-    // }else{
-    //     console.log(requiredCourse);
-    //     for(const i of requiredCourse){
-    //         const mustTakenCourseQuery = await sql`SELECT enrollmentid FROM enrollments WHERE classid = ${i.classid as string} AND status = 'done';`
-    //         if(!mustTakenCourseQuery.rows[0]?.enrollmentid){
-    //             mustTakenClasses.push(i)
-    //         }else{
-
-    //         }
-    //     }
-        
-    //     return NextResponse.json({message:"Must taken or finish these classes",data:mustTakenClasses},{status:200})
-    // }
-
-
-    //2nd check if user already assigned for those class
-    
-
-    //3rd what to return 
-    // if(requiredCourse.length === 0){
-        
-    //     for(const i of courses){
-    //         await sql`INSERT INTO enrollments (userid, classid, status) VALUES (${userId}, ${i.classid},'enrolled')`
-    //     }
-    //     console.log("ok to add")
-    // }else{
-    //     return NextResponse.json({requiredCourse:requiredCourse},{status:400})
-    // }
+   
 
     for(const i of courses){
         //Check if Student already take a course

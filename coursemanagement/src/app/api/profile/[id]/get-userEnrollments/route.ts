@@ -14,21 +14,28 @@ type enrollmentDataType = {
     userid:number,
     classid:string,
     enrollmentdate:string,
-    status:string
+    status:string,
+    grade:number
 }
 
 
 export async function POST(request:Request, {params}:{params:requestParams}){
     const userId = params.id;
     
-    const enrollmentQuery = await sql`SELECT * FROM enrollments WHERE userid = ${userId} AND `
+    const enrollmentQuery = await sql`SELECT * FROM enrollments WHERE userid = ${userId}`
     
     const enrollmentData:enrollmentDataType[] = enrollmentQuery.rows as enrollmentDataType[];
 
-    const classIdArray:string[] = enrollmentData.map(item=>item.classid);
-    
+    const userEnrollment:enrollmentType[] = enrollmentData.map(item=>{
+        return {
+            CRN:item?.classid,
+            enrollmentdate: convertDateFunction(item?.enrollmentdate),
+            grade:item?.grade,
+            status:item?.status
+        }
+    })
 
-    console.log(enrollmentData)
 
-    return NextResponse.json({message:"Hello"},{status:200});
+
+    return NextResponse.json({data:userEnrollment},{status:200});
 }

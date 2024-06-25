@@ -31,10 +31,14 @@ export default function AdjustClass({params}:{params: {id:number}}){
                 method:'POST'
             })
 
-            console.log(await res.json())
+            const responseJson = await res.json();
+            
+            setEnrollments(responseJson.data)
         }
         fetchData()
     },[])
+
+    console.log(enrollment)
 
     return(
         render && 
