@@ -115,18 +115,18 @@ export default function Profile({params}:{params:{id:number}}){
                 {course.CRN}
               </CardDescription>
             </CardContent>
-            <CardFooter>
+            
               <CardContent className="flex gap-3">
-                <div className="flex">
+                <div className="flex gap-2">
                   <Calendar />
                   <p>{course.startDate}</p>
                 </div>
-                <div className="flex">
+                <div className="flex gap-2">
                   <User />
                   <p>{course.professor}</p>
                 </div>
               </CardContent>
-            </CardFooter>
+            
         </Card>
     )
   })

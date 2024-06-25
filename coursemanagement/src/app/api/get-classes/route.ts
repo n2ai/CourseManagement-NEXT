@@ -8,7 +8,7 @@ export type classType = {
     enddate:string,
     room:number,
     classname:string,
-    credit:number,
+    credit:number
 }
 
 export const convertDateFunction = (item:string):string=>{

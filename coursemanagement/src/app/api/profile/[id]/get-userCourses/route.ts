@@ -3,7 +3,7 @@ import { NextResponse } from "next/server";
 import { classType } from "@/app/api/get-classes/route";
 import { convertDateFunction } from "@/app/api/get-classes/route";
 
-type requestParams = {
+export type requestParams = {
     id:number
 }
 

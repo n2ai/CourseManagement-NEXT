@@ -3,6 +3,7 @@ import { Button } from "./button";
 import { usePathname } from 'next/navigation'
 import Link from "next/link";
 import { LayoutDashboard,Book,Calendar, Settings,Captions } from "lucide-react";
+import AdjustClass from "@/app/profile/[id]/adjustClass/page";
 
 
 interface ISideNavProps{
@@ -39,9 +40,9 @@ export function SideNav ({id}:{id:number}){
                 </Button>
             </Link>
             
-            <Link href={`/profile/${id}/settings`}>
+            <Link href={`/profile/${id}/adjustClass`}>
                 <Button className="h-[50px] border hover:text-white text-black bg-white ml-2 mr-2">
-                    <Settings/>Settings
+                    AdJust Class
                 </Button>
             </Link>
             
