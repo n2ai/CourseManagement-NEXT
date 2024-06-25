@@ -11,7 +11,7 @@ import {
 import { useState } from "react";
 import { useEffect } from "react";
 
-type EnrollmentType = {
+export type enrollmentType = {
     CRN:string,
     enrollmentdate:string,
     grade:number,
@@ -22,7 +22,7 @@ type EnrollmentType = {
 
 export default function AdjustClass({params}:{params: {id:number}}){
     const [render,setRender] = useState<boolean>(true);
-    const [enrollment, setEnrollments] = useState<EnrollmentType[]>();
+    const [enrollment, setEnrollments] = useState<enrollmentType[]>();
     const userId = params.id
 
     useEffect(()=>{

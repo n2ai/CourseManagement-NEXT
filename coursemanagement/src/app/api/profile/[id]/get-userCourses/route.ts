@@ -22,7 +22,7 @@ export async function POST(request:Request, {params}:{params:requestParams}){
     try{
         const classInformationQuery = await sql`SELECT * FROM classes WHERE classid IN (SELECT classid FROM enrollments WHERE userid = ${userId});`;
         const classInformationQueryResult = classInformationQuery?.rows; 
-
+        
         classInformation = classInformationQueryResult.map((item)=>{
             const {classtypeid, ...data} = item;
             return {
