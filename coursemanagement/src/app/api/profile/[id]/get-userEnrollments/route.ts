@@ -22,7 +22,7 @@ type enrollmentDataType = {
 export async function POST(request:Request, {params}:{params:requestParams}){
     const userId = params.id;
     
-    const enrollmentQuery = await sql`SELECT * FROM enrollments WHERE userid = ${userId}`
+    const enrollmentQuery = await sql`SELECT * FROM enrollments WHERE userid = ${userId} AND status = 'enrolled';`
     
     const enrollmentData:enrollmentDataType[] = enrollmentQuery.rows as enrollmentDataType[];
 

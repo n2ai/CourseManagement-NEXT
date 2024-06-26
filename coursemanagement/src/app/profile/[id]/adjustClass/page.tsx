@@ -1,4 +1,5 @@
 'use client';
+import { Input } from "@/components/ui/input";
 import {
     Table,
     TableBody,
@@ -40,6 +41,23 @@ export default function AdjustClass({params}:{params: {id:number}}){
 
     console.log(enrollment)
 
+    const tableCellArray = enrollment?.map((item, index)=>{
+        return(
+            <TableRow key={index}>
+                <TableCell>{item.CRN}</TableCell>
+                <TableCell>{item.enrollmentdate}</TableCell>
+                <TableCell>
+                    <Input type="number" placeholder={item.grade.toString()}></Input>
+                    / 4.0
+                </TableCell>
+                <TableCell>
+                    
+                </TableCell>
+                
+            </TableRow>
+        )   
+    })
+
     return(
         render && 
         (
@@ -51,10 +69,14 @@ export default function AdjustClass({params}:{params: {id:number}}){
                             <TableHead>CRN</TableHead>
                             <TableHead>Enrollment Date</TableHead>
                             <TableHead>Grade</TableHead>
-                            <TableHead>Status</TableHead>
+                            <TableHead>Finished</TableHead>
                             <TableHead>Action</TableHead>
                         </TableRow>
                     </TableHeader>
+                    <TableBody>
+                        {/** Will drop the array of value here */}
+                        {tableCellArray}
+                    </TableBody>
                 </Table>
             </div>
         )
