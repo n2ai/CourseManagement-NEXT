@@ -1,4 +1,6 @@
 'use client';
+import { Checkbox } from "@/components/ui/checkbox";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
     Table,
@@ -24,6 +26,7 @@ export type enrollmentType = {
 export default function AdjustClass({params}:{params: {id:number}}){
     const [render,setRender] = useState<boolean>(true);
     const [enrollment, setEnrollments] = useState<enrollmentType[]>();
+    //Create a usteState that control the new update state
     const userId = params.id
 
     useEffect(()=>{
@@ -39,6 +42,18 @@ export default function AdjustClass({params}:{params: {id:number}}){
         fetchData()
     },[])
 
+    const handleUpdateEnrollment = (classId:string)=>{
+
+    }
+
+    const handleCheckBoxEnrollment = (classId:string)=>{
+
+    }
+
+    const handleGradeInputEnrollment = (classId:string)=>{
+        
+    }
+
     console.log(enrollment)
 
     const tableCellArray = enrollment?.map((item, index)=>{
@@ -46,14 +61,16 @@ export default function AdjustClass({params}:{params: {id:number}}){
             <TableRow key={index}>
                 <TableCell>{item.CRN}</TableCell>
                 <TableCell>{item.enrollmentdate}</TableCell>
-                <TableCell>
-                    <Input type="number" placeholder={item.grade.toString()}></Input>
+                <TableCell className="flex items-center">
+                    <Input className="w-[50%]" type="number" placeholder={item.grade.toString()}></Input>
                     / 4.0
                 </TableCell>
                 <TableCell>
-                    
+                    <Checkbox value={"finished"} ></Checkbox>
                 </TableCell>
-                
+                <TableCell>
+                    <Button>Update</Button>
+                </TableCell>
             </TableRow>
         )   
     })
