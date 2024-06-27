@@ -25,10 +25,17 @@ export type enrollmentType = {
 
 export default function AdjustClass({params}:{params: {id:number}}){
     const [render,setRender] = useState<boolean>(true);
-    const [enrollment, setEnrollments] = useState<enrollmentType[]>();
+    const [enrollment, setEnrollments] = useState<enrollmentType[]>([{
+        CRN: "",
+        enrollmentdate:"",
+        grade: 0.00,
+        status:""
+    }]);
     //Create a usteState that control the new update state
     const userId = params.id
 
+
+    
     useEffect(()=>{
         const fetchData = async ()=>{
             const res = await fetch(`http://localhost:3000/api/profile/${userId}/get-userEnrollments`,{
@@ -42,6 +49,12 @@ export default function AdjustClass({params}:{params: {id:number}}){
         fetchData()
     },[])
 
+    //Logic:
+    //Update User enrollments
+    //Using ClassId for checking if the thing is done or not
+    //Cannot put input number out of range 0.00 to 4.00 
+    //If the button is clicked but the input is 0.00 cannot submit
+
     const handleUpdateEnrollment = (classId:string)=>{
 
     }
@@ -50,8 +63,16 @@ export default function AdjustClass({params}:{params: {id:number}}){
 
     }
 
-    const handleGradeInputEnrollment = (classId:string)=>{
-        
+    const handleGradeInputEnrollment = (e:React.FormEvent<HTMLInputElement>)=>{
+        const value = Number(e.currentTarget.value);
+        const CRN = e.currentTarget.name;
+        setEnrollments((prev:enrollmentType[])=>{
+            const enrollmentArray:enrollmentType[] = prev.map((item:enrollmentType)=>{
+                return item.CRN === CRN ? {...item, grade: value}  : item
+            })
+
+            return enrollmentArray
+        })
     }
 
     console.log(enrollment)
@@ -62,11 +83,11 @@ export default function AdjustClass({params}:{params: {id:number}}){
                 <TableCell>{item.CRN}</TableCell>
                 <TableCell>{item.enrollmentdate}</TableCell>
                 <TableCell className="flex items-center">
-                    <Input className="w-[50%]" type="number" placeholder={item.grade.toString()}></Input>
+                    <Input id={item.CRN} name={item.CRN} max={4.00} min={1.00} className="w-[50%]" type="number" placeholder={item.grade.toString()}></Input>
                     / 4.0
                 </TableCell>
                 <TableCell>
-                    <Checkbox value={"finished"} ></Checkbox>
+                    <Checkbox id={item.CRN} name={item.CRN} value={"finished"} ></Checkbox>
                 </TableCell>
                 <TableCell>
                     <Button>Update</Button>
