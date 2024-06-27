@@ -18,9 +18,18 @@ export type enrollmentType = {
     CRN:string,
     enrollmentdate:string,
     grade:number,
-    status:string
-}
+    status:string,
+    isChecked:boolean
+};
 
+export type fetchEnrollmenType = Omit<enrollmentType,"isChecked">;
+
+export type updateEnrollmentType = {
+    CRN:string,
+    grade:number,
+    status:string,
+    isChecked:boolean
+}
 
 
 export default function AdjustClass({params}:{params: {id:number}}){
@@ -29,7 +38,14 @@ export default function AdjustClass({params}:{params: {id:number}}){
         CRN: "",
         enrollmentdate:"",
         grade: 0.00,
-        status:""
+        status:"",
+        isChecked:false
+    }]);
+    const [updateForm, setUpdateForm] = useState<updateEnrollmentType[]>([{
+        CRN:"enrolled",
+        grade:0.00,
+        status:"enrolled",
+        isChecked:false
     }]);
     //Create a usteState that control the new update state
     const userId = params.id
@@ -43,8 +59,19 @@ export default function AdjustClass({params}:{params: {id:number}}){
             })
 
             const responseJson = await res.json();
+            setEnrollments(
+                responseJson.data.map((item:fetchEnrollmenType)=>{
+                    return {
+                        CRN:item.CRN,
+                        enrollmentdate:item.enrollmentdate,
+                        grade:item.grade,
+                        status:item.status,
+                        isChecked:false
+                    }
+                })
+            )
             
-            setEnrollments(responseJson.data)
+            
         }
         fetchData()
     },[])
@@ -55,12 +82,22 @@ export default function AdjustClass({params}:{params: {id:number}}){
     //Cannot put input number out of range 0.00 to 4.00 
     //If the button is clicked but the input is 0.00 cannot submit
 
-    const handleUpdateEnrollment = (classId:string)=>{
-
+    const handleUpdateEnrollment = (CRN:string)=>{
+        const updateEnrollmentInfo = enrollment.filter(item=>item.CRN == CRN);
+        console.log(updateEnrollmentInfo);
     }
 
-    const handleCheckBoxEnrollment = (classId:string)=>{
+    const handleCheckBoxEnrollment = (e:React.FormEvent<HTMLButtonElement>)=>{
+        
+        const CRN = e.currentTarget.id
+        console.log(e.currentTarget)
+        setEnrollments((prev:enrollmentType[])=>{
+            const enrollmentArray:enrollmentType[] = prev.map((item:enrollmentType)=>{
+                return item.CRN === CRN ? {...item, isChecked: !item.isChecked }  : item;
+            })
 
+            return enrollmentArray;
+        })
     }
 
     const handleGradeInputEnrollment = (e:React.FormEvent<HTMLInputElement>)=>{
@@ -68,14 +105,14 @@ export default function AdjustClass({params}:{params: {id:number}}){
         const CRN = e.currentTarget.name;
         setEnrollments((prev:enrollmentType[])=>{
             const enrollmentArray:enrollmentType[] = prev.map((item:enrollmentType)=>{
-                return item.CRN === CRN ? {...item, grade: value}  : item
+                return item.CRN === CRN ? {...item, grade: value}  : item;
             })
 
-            return enrollmentArray
+            return enrollmentArray;
         })
     }
 
-    console.log(enrollment)
+
 
     const tableCellArray = enrollment?.map((item, index)=>{
         return(
@@ -83,18 +120,20 @@ export default function AdjustClass({params}:{params: {id:number}}){
                 <TableCell>{item.CRN}</TableCell>
                 <TableCell>{item.enrollmentdate}</TableCell>
                 <TableCell className="flex items-center">
-                    <Input id={item.CRN} name={item.CRN} max={4.00} min={1.00} className="w-[50%]" type="number" placeholder={item.grade.toString()}></Input>
+                    <Input onChange={(e)=>handleGradeInputEnrollment(e)} id={item.CRN} name={item.CRN} max={4.00} min={1.00} className="w-[50%]" type="number" placeholder={item.grade.toString()}></Input>
                     / 4.0
                 </TableCell>
                 <TableCell>
-                    <Checkbox id={item.CRN} name={item.CRN} value={"finished"} ></Checkbox>
+                    <Checkbox onClick={(e)=>handleCheckBoxEnrollment(e)} id={item.CRN} name={item.CRN} value={"finished"} ></Checkbox>
                 </TableCell>
                 <TableCell>
-                    <Button>Update</Button>
+                    <Button onClick={()=>handleUpdateEnrollment(item.CRN)}>Update</Button>
                 </TableCell>
             </TableRow>
         )   
     })
+
+    console.log(enrollment)
 
     return(
         render && 
