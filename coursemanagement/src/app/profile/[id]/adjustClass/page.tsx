@@ -33,7 +33,7 @@ export type updateEnrollmentType = {
 
 
 export default function AdjustClass({params}:{params: {id:number}}){
-    const [render,setRender] = useState<boolean>(true);
+    const [render,setRender] = useState<boolean>(false);
     const [enrollment, setEnrollments] = useState<enrollmentType[]>([{
         CRN: "",
         enrollmentdate:"",
@@ -41,39 +41,34 @@ export default function AdjustClass({params}:{params: {id:number}}){
         status:"",
         isChecked:false
     }]);
-    const [updateForm, setUpdateForm] = useState<updateEnrollmentType[]>([{
-        CRN:"enrolled",
-        grade:0.00,
-        status:"enrolled",
-        isChecked:false
-    }]);
+
     //Create a usteState that control the new update state
     const userId = params.id
-
-
     
-    useEffect(()=>{
-        const fetchData = async ()=>{
-            const res = await fetch(`http://localhost:3000/api/profile/${userId}/get-userEnrollments`,{
-                method:'POST'
-            })
+    const fetchData = async ()=>{
+        const res = await fetch(`http://localhost:3000/api/profile/${userId}/get-userEnrollments`,{
+            method:'POST'
+        })
 
-            const responseJson = await res.json();
-            setEnrollments(
-                responseJson.data.map((item:fetchEnrollmenType)=>{
-                    return {
-                        CRN:item.CRN,
-                        enrollmentdate:item.enrollmentdate,
-                        grade:item.grade,
-                        status:item.status,
-                        isChecked:false
-                    }
-                })
-            )
-            
-            
-        }
-        fetchData()
+        const responseJson = await res.json();
+        setEnrollments(
+            responseJson.data.map((item:fetchEnrollmenType)=>{
+                return {
+                    CRN:item.CRN,
+                    enrollmentdate:item.enrollmentdate,
+                    grade:item.grade,
+                    status:item.status,
+                    isChecked:false
+                }
+            })
+        )
+        setRender(true);
+        
+    }
+
+    useEffect(()=>{
+        fetchData();
+        
     },[])
 
     //Logic:
@@ -83,19 +78,32 @@ export default function AdjustClass({params}:{params: {id:number}}){
     //If the button is clicked but the input is 0.00 cannot submit
 
     const handleUpdateEnrollment = (CRN:string)=>{
-        const updateEnrollmentInfo = enrollment.filter(item=>item.CRN == CRN);
-        console.log(updateEnrollmentInfo);
-
-        const updateEnrollmentResponse = fetch(`http://localhost:3000/api/profile/${userId}/update-userEnrollments`,{
-            method:'PUT',
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body:JSON.stringify(updateEnrollmentInfo)
-        })
-
+        const updateEnrollmentInfo = enrollment.filter(item=>item.CRN == CRN)[0];
+        const isChecked = updateEnrollmentInfo.isChecked;
         
+        if(isChecked === true){
+            updateEnrollmentInfo.status = "finished";
+        }else{
+            updateEnrollmentInfo.status = "enrolled";
+        }
 
+        const grade = updateEnrollmentInfo.grade;
+        if(isChecked === true && (grade > 0.00 && grade <= 4.00 )){
+            const updateEnrollmentResponse = fetch(`http://localhost:3000/api/profile/${userId}/update-userEnrollments`,{
+                method:'PUT',
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body:JSON.stringify(updateEnrollmentInfo)
+            })
+
+        }else if(updateEnrollmentInfo.isChecked === false){
+            alert("Must check the box before update");
+        }else if((grade <= 0.00) || (grade > 4.00) ){
+            alert("Invalid grade");
+        }else{
+            alert("Missing Credentials");
+        }
     }
 
     const handleCheckBoxEnrollment = (e:React.FormEvent<HTMLButtonElement>)=>{
@@ -104,7 +112,7 @@ export default function AdjustClass({params}:{params: {id:number}}){
         console.log(e.currentTarget)
         setEnrollments((prev:enrollmentType[])=>{
             const enrollmentArray:enrollmentType[] = prev.map((item:enrollmentType)=>{
-                return item.CRN === CRN ? {...item, isChecked: !item.isChecked }  : item;
+                return item.CRN === CRN ? {...item,isChecked: !item.isChecked }  : item;
             })
 
             return enrollmentArray;
@@ -113,6 +121,7 @@ export default function AdjustClass({params}:{params: {id:number}}){
 
     const handleGradeInputEnrollment = (e:React.FormEvent<HTMLInputElement>)=>{
         const value = Number(e.currentTarget.value);
+        
         const CRN = e.currentTarget.name;
         setEnrollments((prev:enrollmentType[])=>{
             const enrollmentArray:enrollmentType[] = prev.map((item:enrollmentType)=>{
@@ -121,6 +130,7 @@ export default function AdjustClass({params}:{params: {id:number}}){
 
             return enrollmentArray;
         })
+        
     }
 
 
