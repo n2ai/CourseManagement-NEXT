@@ -85,6 +85,17 @@ export default function AdjustClass({params}:{params: {id:number}}){
     const handleUpdateEnrollment = (CRN:string)=>{
         const updateEnrollmentInfo = enrollment.filter(item=>item.CRN == CRN);
         console.log(updateEnrollmentInfo);
+
+        const updateEnrollmentResponse = fetch(`http://localhost:3000/api/profile/${userId}/update-userEnrollments`,{
+            method:'PUT',
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body:JSON.stringify(updateEnrollmentInfo)
+        })
+
+        
+
     }
 
     const handleCheckBoxEnrollment = (e:React.FormEvent<HTMLButtonElement>)=>{
@@ -127,7 +138,7 @@ export default function AdjustClass({params}:{params: {id:number}}){
                     <Checkbox onClick={(e)=>handleCheckBoxEnrollment(e)} id={item.CRN} name={item.CRN} value={"finished"} ></Checkbox>
                 </TableCell>
                 <TableCell>
-                    <Button onClick={()=>handleUpdateEnrollment(item.CRN)}>Update</Button>
+                    <Button onClick={(e)=>handleUpdateEnrollment(item.CRN)}>Update</Button>
                 </TableCell>
             </TableRow>
         )   
