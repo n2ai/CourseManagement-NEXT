@@ -96,6 +96,13 @@ export default function AdjustClass({params}:{params: {id:number}}){
                 },
                 body:JSON.stringify(updateEnrollmentInfo)
             })
+            
+            updateEnrollmentResponse.then(()=>{
+                fetchData()
+            }).catch(()=>{
+                alert("Error happen")
+            })
+            
 
         }else if(updateEnrollmentInfo.isChecked === false){
             alert("Must check the box before update");

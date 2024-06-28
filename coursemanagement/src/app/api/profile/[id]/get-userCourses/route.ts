@@ -20,7 +20,7 @@ export async function POST(request:Request, {params}:{params:requestParams}){
     let classInformation:classType[] = [];
 
     try{
-        const classInformationQuery = await sql`SELECT * FROM classes WHERE classid IN (SELECT classid FROM enrollments WHERE userid = ${userId});`;
+        const classInformationQuery = await sql`SELECT * FROM classes WHERE classid IN (SELECT classid FROM enrollments WHERE userid = ${userId} AND status = 'enrolled');`;
         const classInformationQueryResult = classInformationQuery?.rows; 
         
         classInformation = classInformationQueryResult.map((item)=>{
