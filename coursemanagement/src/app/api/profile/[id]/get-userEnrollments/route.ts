@@ -9,7 +9,7 @@ import { fetchEnrollmenType } from "@/app/profile/[id]/adjustClass/page";
 //IF there is, query the actual grade
 //IF not, make it 0.0
 
-type enrollmentDataType = {
+export type enrollmentDataType = {
     enrollmentid:number,
     userid:number,
     classid:string,

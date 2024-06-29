@@ -19,14 +19,18 @@ import {
     TableRow,
 } from "@/components/ui/table";
 import { useEffect, useState } from "react";
-interface IStudentRecordTable{
-    CRN:string,
-    grade:number,
-    status: string
-}
+// interface IStudentRecordTable{
+//     CRN:string,
+//     grade:number,
+//     status: string
+// }
 
-interface IStudentRecordCard{
-    classtype:string,
+export type studentRecordsType = {
+    classid:string,
+    grade: number,
+    lettergrade:string,
+    status: string,
+    classtypeid:string
 }
 
 export type classTypesType = {
@@ -37,9 +41,9 @@ export type classTypesType = {
 
 export const StudentRecordCard:React.FC<Omit<classTypesType,"classtypeid">> = ({typename}) => {
     return (
-        <Card className="bg-red-400 w-[30%]">
+        <Card className="w-[30%] border border-black">
             <CardHeader>
-                <h1>{typename}</h1>
+                <CardTitle>{typename}</CardTitle>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -52,10 +56,14 @@ export const StudentRecordCard:React.FC<Omit<classTypesType,"classtypeid">> = ({
                                 Grade
                             </TableHead>
                             <TableHead>
+                                Letter Grade
+                            </TableHead>
+                            <TableHead>
                                 Status
                             </TableHead>
                         </TableRow>
                     </TableHeader>
+                    
                 </Table>
             </CardContent>
         </Card>
@@ -65,24 +73,38 @@ export const StudentRecordCard:React.FC<Omit<classTypesType,"classtypeid">> = ({
 export default function Grades({params}:{params:{id:number}}){
 
     const [classTypes, setClassTypes] = useState<classTypesType[]>()
-
+    const [studentRecords, setStudenRecords] = useState<studentRecordsType[]>()
     const userId = params.id;
 
-    const fetchClassTypes = async ()=>{
-        const fetchClassTypesResponse = await fetch(`http://localhost:3000/api/profile/${userId}/get-classTypes`,{
+    const fetchData = async ()=>{
+        const fetchClassTypes = await fetch(`http://localhost:3000/api/profile/${userId}/get-classTypes`,{
             method:"POST"
         }).then((response)=>{
-            return response.json()
+            return response.json();
         }).then((data)=>{
-            setClassTypes(data.data)
+            setClassTypes(data.data);
+        });
+
+        const fetchStudentRecords = await fetch(`http://localhost:3000/api/profile/${userId}/get-studentRecords`,{
+            method:"POST"
+        }).then((response)=>{
+            return response.json();
+        }).then((data)=>{
+            setStudenRecords(data.data);
+            console.log(studentRecords);
+        }).catch((error)=>{
+            console.log(error);
+            alert(error);
         })
-        ;
+
     }
 
-    useEffect(()=>{
-        fetchClassTypes()
-    },[])
     
+
+    useEffect(()=>{
+        fetchData()
+    },[])
+     
     
     const studentRecordCards = classTypes?.map((item,index)=>{
         return <StudentRecordCard key={index} typename={item.typename}></StudentRecordCard>
@@ -95,7 +117,7 @@ export default function Grades({params}:{params:{id:number}}){
                 <h1 className="text-2xl pl-4">Student Record</h1>
             </div>
             
-            <div>
+            <div className="w-full h-full flex flex-wrap gap-3 p-3">
                 {studentRecordCards}
             </div>
 
