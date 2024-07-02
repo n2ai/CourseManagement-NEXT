@@ -2,24 +2,7 @@ import { requestParams } from "../get-userCourses/route";
 import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 import { enrollmentType } from "@/app/profile/[id]/adjustClass/page";
-
-export function letterGradeCalculation(gpa:number){
-    let letterGrade;
-
-    if (gpa >= 3.7) {
-        letterGrade = 'A';
-    } else if (gpa >= 2.7) {
-        letterGrade = 'B';
-    } else if (gpa >= 1.7) {
-        letterGrade = 'C';
-    } else if (gpa >= 1.0) {
-        letterGrade = 'D';
-    } else {
-        letterGrade = 'F';
-    }
-
-    return letterGrade;
-}
+import { letterGradeCalculation } from "@/helpers/letterGradeCalculation";
 
 export async function PUT(request:Request,{params}:{params:requestParams}){
     let enrollmentData = await request.json()

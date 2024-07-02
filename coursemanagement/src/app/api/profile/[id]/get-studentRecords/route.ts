@@ -3,7 +3,7 @@ import { sql } from "@vercel/postgres";
 import { NextResponse } from "next/server";
 import { studentRecordsType } from "@/app/profile/[id]/grades/page";
 import { enrollmentDataType } from "../get-userEnrollments/route";  
-import { letterGradeCalculation } from "../update-userEnrollments/route";
+import { letterGradeCalculation } from "@/helpers/letterGradeCalculation";
 
 type recordTotalCreditsType = {
     classtypeid:string,
