@@ -30,18 +30,24 @@ export type studentRecordsType = {
     grade: number,
     lettergrade:string,
     status: string,
-    classtypeid:string
+    classtypeid:string,
+    credit:number
 }
 
 export type classTypesType = {
     classtypeid:string,
     typename:string,
-    recordlist:studentRecordsType[]
+    recordlist:studentRecordsType[],
+    totalcredit:number,
+    requiredcredit:number
 }
 
-
-export const StudentRecordCard:React.FC<Omit<classTypesType,"classtypeid">> = ({typename,recordlist}) => {
-    
+export type recordTotalCreditsType = {
+    classtypeid:string,
+    totalcredit:number,
+    requiredcredit:number
+}
+export const StudentRecordCard:React.FC<Omit<classTypesType,"classtypeid">> = ({typename,recordlist, totalcredit,requiredcredit}) => {
     const cardCells = recordlist.map((item,index)=>{
         return(
             <TableRow key={index}>
@@ -65,6 +71,7 @@ export const StudentRecordCard:React.FC<Omit<classTypesType,"classtypeid">> = ({
         <Card className="w-[30%] border border-black">
             <CardHeader>
                 <CardTitle>{typename}</CardTitle>
+                <CardDescription>Credit: {totalcredit} / {requiredcredit}</CardDescription>
             </CardHeader>
             <CardContent>
                 <Table>
@@ -102,8 +109,15 @@ export default function Grades({params}:{params:{id:number}}){
         grade: 0,
         lettergrade:"",
         status: "",
-        classtypeid:""
+        classtypeid:"",
+        credit:0
     }])
+    const [totalRecords, setTotalRecords] = useState<recordTotalCreditsType[]>([{
+        classtypeid: "",
+        totalcredit: 0,
+        requiredcredit: 0
+    }])
+    
     const userId = params.id;
 
     const fetchData = async ()=>{
@@ -120,7 +134,8 @@ export default function Grades({params}:{params:{id:number}}){
         }).then((response)=>{
             return response.json();
         }).then((data)=>{
-            setStudentRecords(data.data);
+            setStudentRecords(data.studentRecords);
+            setTotalRecords(data.totalRecords);
             setRender(true);
             
         }).catch((error)=>{
@@ -137,21 +152,39 @@ export default function Grades({params}:{params:{id:number}}){
     },[])
      
     
+    
     const studentRecordCards = classTypes?.map((item,index)=>{
-        const recordList = studentRecords?.filter((record)=>record.classtypeid === item.classtypeid)
-        return <StudentRecordCard key={index} typename={item.typename} recordlist={recordList}></StudentRecordCard>
+        const recordList = studentRecords?.filter((record)=>record.classtypeid === item.classtypeid);
+        let totalcredit = 0;
+        let requiredcredit = 0;
+        for(const i of totalRecords){
+            if(i.classtypeid == item.classtypeid){
+                totalcredit = i.totalcredit;
+                requiredcredit = i.requiredcredit;
+                console.log(totalcredit,requiredcredit)
+            }
+        }
+        return <StudentRecordCard key={index} typename={item.typename} recordlist={recordList} totalcredit={totalcredit} requiredcredit={requiredcredit}></StudentRecordCard>
     })
     
+    console.log(totalRecords)
 
     return(
         render &&
         <div className="w-full h-ffull">
+            {/**Title section */}
             <div className="w-full h-[50px] items-center flex bg-black text-white">
                 <h1 className="text-2xl pl-4">Student Record</h1>
             </div>
-            
+
+            {/**Student Records Section */}
             <div className="w-full h-full flex flex-wrap gap-3 p-3">
                 {studentRecordCards}
+            </div>
+
+            {/**Check be able to graduate section */}
+            <div>
+
             </div>
 
         </div>
