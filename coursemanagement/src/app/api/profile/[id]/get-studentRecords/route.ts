@@ -8,7 +8,7 @@ import { letterGradeCalculation } from "../update-userEnrollments/route";
 export async function POST(request:Request, {params}:{params:requestParams}){
     const userid = params.id;
     let studentRecords:studentRecordsType[] = [];
-    const studentEnrollmentsQuery = await sql`SELECT * FROM enrollments WHERE userid = ${userid}`;
+    const studentEnrollmentsQuery = await sql`SELECT * FROM enrollments WHERE userid = ${userid} AND status != 'enrolled'`;
     const studentEnrollments:enrollmentDataType[] = studentEnrollmentsQuery.rows as enrollmentDataType[];
     try{
         const classtypeidQueryFunc = async (classid:string):Promise<string>=>{

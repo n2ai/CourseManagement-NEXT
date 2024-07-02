@@ -36,8 +36,6 @@ export async function POST(request:Request, {params}:{params:requestParams}){
             }
         })
 
-        console.log(classInformationQueryResult)
-
         return NextResponse.json({data:classInformation},{status:200})
 
     }catch(err){
