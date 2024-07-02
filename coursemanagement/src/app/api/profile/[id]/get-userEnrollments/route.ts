@@ -1,7 +1,7 @@
 import { requestParams } from "../get-userCourses/route";
 import { NextResponse } from "next/server";
 import { sql } from "@vercel/postgres";
-import { convertDateFunction } from "@/app/api/get-classes/route";
+import { convertDateFunction } from "@/helpers/convertDateFunction";
 import { fetchEnrollmenType } from "@/app/profile/[id]/adjustClass/page";
 
 //Enrollemnt Query
